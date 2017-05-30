@@ -9,17 +9,18 @@ def search_abstract(url):
     try:
         div = soup.findAll("div", {"class": "it"})[0]
     except IndexError:
-        print("l'articolo non possiede un abstract")
+        print("l'articolo non possiede un abstract: " + url)
         div = None
     return div
 
-
-def main():
-    word = 'base'  # parola da cercare con dbpedia
-    word = word[0].upper() + word[1:]  # metto la prima lettera maiuscola perchè l'url vuole così
+'''
+word_base -> indica la parola su cui si basa il concetto che si vuole cercare
+word_to_search -> indica una delle parole situate prima o dopo la parola 'concetto' usate per capire 
+a quale concetto la parola base faccia riferimento
+'''
+def search_urls(word_base):
     plist = []  # creo una lista vuota
-    software = 0  # contatore impostato a zero
-    url = 'http://it.dbpedia.org/resource/' + word + '/html'  # url della pagina web
+    url = 'http://it.dbpedia.org/resource/' + word_base + '/html'  # url della pagina web
     # trovo l'html della pagina web
     page = requests.get(url).text
     soup = bs4.BeautifulSoup(page, 'lxml')
@@ -29,22 +30,18 @@ def main():
         new_url = new_url.replace('<', '')
         new_url = new_url.replace('>', '')
         plist.append(new_url)
-    plist = plist[1:]
-    print(plist)
-    # first_link = plist[4] # prendo il primo elemento della lista
-    # print(first_link + '/html')
+    return plist
+
+def search_in_abstract(word_base, plist):
+    match = 0
+    #plist = search_urls(word_base)
     for i in plist:
         parag = search_abstract(i + '/html')
         if parag != None:
             abstract = parag.text  # richiamo la funzione
-        print(abstract)
-        parola = 'base'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
+        word_to_search = 'è'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
 
-        if parola in abstract:  # se trovo la parola nella descrizione
-            software = software + 1  # aumento il contatore di uno
+        if word_to_search in abstract:  # se trovo la parola nella descrizione
+            match = match + 1  # aumento il contatore di uno
 
-    print(software)  # stampo software
-
-
-if __name__ == '__main__':
-    main()
+    return match
