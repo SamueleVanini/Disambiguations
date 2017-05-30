@@ -9,7 +9,7 @@ def main():
         url = url.replace('<', '')
         url = url.replace('>', '')
         list_urls.append(url)
-    match = search_in_page.search_in_abstract(word_base, list_urls)
+    match = search_in_page.search_in_abstract(list_urls)
     print(match)
 
 if __name__ == '__main__':

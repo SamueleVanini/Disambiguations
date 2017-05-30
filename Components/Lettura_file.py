@@ -1,9 +1,9 @@
 import codecs
 
+
 def create_dict(word_to_search):
     dict = {}
     file = codecs.open('File_dbpedia/itwiki-20150121-disambiguations.ttl', 'rU', 'utf-8')
-    # file = codecs.open('prova', 'rU', 'utf-8')
     list_help = []
     dict_stop = False
     for raw in file:
@@ -14,7 +14,7 @@ def create_dict(word_to_search):
                 dict_stop = True
                 list_help.append(value)
                 dict[key] = tuple(list_help)
-            if dict_stop == True and key.upper() > '<HTTP://IT.DBPEDIA.ORG/RESOURCE/'+word_to_search.upper()+'>':
+            if dict_stop is True and key.upper() > '<HTTP://IT.DBPEDIA.ORG/RESOURCE/'+word_to_search.upper()+'>':
                 break
     file.close()
     return list(dict.values())

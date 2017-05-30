@@ -3,6 +3,8 @@ import bs4
 from Components import exclude_word
 
 # ritorna il contenitore delle informazioni della pagina web
+
+
 def search_abstract(url):
     page = requests.get(url).text
     soup = bs4.BeautifulSoup(page, 'lxml')
@@ -18,6 +20,8 @@ word_base -> indica la parola su cui si basa il concetto che si vuole cercare
 word_to_search -> indica una delle parole situate prima o dopo la parola 'concetto' usate per capire 
 a quale concetto la parola base faccia riferimento
 '''
+
+
 def search_urls(word_base):
     plist = []  # creo una lista vuota
     url = 'http://it.dbpedia.org/resource/' + word_base + '/html'  # url della pagina web
@@ -32,12 +36,13 @@ def search_urls(word_base):
         plist.append(new_url)
     return plist
 
-def search_in_abstract(word_base, plist):
+
+def search_in_abstract(plist):
     match = 0
     #plist = search_urls(word_base)
     for i in plist:
         parag = search_abstract(i + '/html')
-        if parag != None:
+        if parag is not None:
             abstract = parag.text  # richiamo la funzione
         word_to_search = 'di'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
 
