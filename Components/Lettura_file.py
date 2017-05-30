@@ -2,12 +2,12 @@ import codecs
 
 dict = {}
 
-def create_dict(file, word_to_search):
+def create_dict(word_to_search):
+    file = codecs.open('File_dbpedia/itwiki-20150121-disambiguations.ttl', 'rU', 'utf-8')
+    # file = codecs.open('prova', 'rU', 'utf-8')
     list_help = []
-    i = 0
     dict_stop = False
     for raw in file:
-        print (i)
         if raw != '# started 2015-01-29T09:18:58Z\r\n' or raw != '# completed 2015-01-29T09:54:37Z\r\n':
             key = raw.split()[0]
             value = raw.split()[2]
@@ -17,14 +17,4 @@ def create_dict(file, word_to_search):
                 dict[key] = tuple(list_help)
             if dict_stop == True and key.upper() > '<HTTP://IT.DBPEDIA.ORG/RESOURCE/'+word_to_search.upper()+'>':
                 break
-        i += 1
-
-def main():
-    file = codecs.open('File_dbpedia/itwiki-20150121-disambiguations.ttl', 'rU', 'utf-8')
-    #file = codecs.open('prova', 'rU', 'utf-8')
-    word_to_search = 'Basic'
-    create_dict(file, word_to_search)
-    print (dict)
-
-if __name__ == '__main__':
-    main()
+    file.close()
