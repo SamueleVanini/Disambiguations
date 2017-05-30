@@ -1,8 +1,8 @@
+import re
+import requests
 from urllib import *
 import string
 import bs4
-import re
-import requests
 
 #ritorna il contenitore delle informazioni della pagina web
 def search_abstract(url): 
@@ -11,7 +11,8 @@ def search_abstract(url):
 	try:
 		div = soup.findAll("div", { "class" : "it" })[0]
 	except IndexError:
-		div = "l'articolo non possiede un abstract"
+		print ("l'articolo non possiede un abstract")
+		div = None
 	return div
 
 def main():
@@ -45,4 +46,4 @@ def main():
 
 	print(software) # stampo software
 if __name__ == '__main__':
-	main()
+	main()       
