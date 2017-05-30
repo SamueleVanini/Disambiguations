@@ -1,6 +1,6 @@
 import requests
 import bs4
-
+from Components import exclude_word
 
 # ritorna il contenitore delle informazioni della pagina web
 def search_abstract(url):
@@ -39,9 +39,10 @@ def search_in_abstract(word_base, plist):
         parag = search_abstract(i + '/html')
         if parag != None:
             abstract = parag.text  # richiamo la funzione
-        word_to_search = 'è'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
+        word_to_search = 'di'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
 
-        if word_to_search in abstract:  # se trovo la parola nella descrizione
-            match = match + 1  # aumento il contatore di uno
+        if word_to_search not in exclude_word.stop_words:
+            if word_to_search in abstract:  # se trovo la parola nella descrizione
+                match = match + 1  # aumento il contatore di uno
 
     return match

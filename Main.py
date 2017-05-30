@@ -9,7 +9,6 @@ def main():
         url = url.replace('<', '')
         url = url.replace('>', '')
         list_urls.append(url)
-    print(list_urls)
     match = search_in_page.search_in_abstract(word_base, list_urls)
     print(match)
 
