@@ -38,30 +38,34 @@ def search_urls(word_base):
     return plist
 
 
+def clean_string(item):
+    return item.text.replace('\t', '').replace('\xa0', '').replace('\n', '').replace('\r', '')
+
+
 def search_in_abstract(file, word_base):
     plist = search_urls(word_base)
     words_to_search = file.read()  # parola da cercare che nel testo può essere prima o dopo della parola chiave
-    words_to_search = re.sub(r'[^\w\s]','',words_to_search)
+    words_to_search = re.sub(r'[^\w\s]', '', words_to_search)
     words_to_search = words_to_search.split()
     result = []
+    tuple_result = ()
     for url in plist:
         total_match = 0
         for word in words_to_search:
             match = 0
-            conten =[]
-            parag = search_abstract(url + '/html') # richiamo la funzione
-            if parag != None: # se la lista non è nulla
-                for item in parag: # per ogni elemento della lista
-                    conten.append(item.text.replace('\t','').replace('\xa0','').replace('\n','').replace('\r',''))# tolgo le schifezze dalle stringhe contenute nella lista
+            conten = []
+            parag = search_abstract(url + '/html')
+            if parag is not None:  # se la lista non è nulla
+                for item in parag:  # per ogni elemento della lista
+                    conten.append(clean_string(item))
             boolean = True
             for i in conten:
-                if match == 1 :
+                if match == 1:
                     boolean = False
-                if boolean and word in i and word not in  exclude_word.stop_words and word != word_base:  # se trovo la parola nella descrizione
+                if boolean and word in i and word not in exclude_word.stop_words and word not in word_base:
                     match = match + 1  # aumento il contatore di uno
             total_match += match
             tuple_result = (total_match, url)
         result.append(tuple_result)
 
     return result
-
