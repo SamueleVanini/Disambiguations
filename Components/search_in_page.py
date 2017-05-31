@@ -1,5 +1,6 @@
 import requests
 import bs4
+import re
 from Components import exclude_word
 
 # ritorna il contenitore delle informazioni della pagina web
@@ -9,9 +10,9 @@ def search_abstract(url):
     page = requests.get(url).text
     soup = bs4.BeautifulSoup(page, 'lxml')
     try:
-        div = soup.findAll("div", {"class": "it"})[0]
+        div = soup.findAll("div", {"class": "fixed"})
     except IndexError:
-        print("l'articolo non possiede un abstract: " + url)
+        print("La pagina non contiene informazioni: " + url)
         div = None
     return div
 
@@ -37,17 +38,30 @@ def search_urls(word_base):
     return plist
 
 
-def search_in_abstract(plist):
-    match = 0
-    #plist = search_urls(word_base)
-    for i in plist:
-        parag = search_abstract(i + '/html')
-        if parag is not None:
-            abstract = parag.text  # richiamo la funzione
-        word_to_search = 'di'  # parola da cercare che nel testo può essere prima o dopo della parola chiave
+def search_in_abstract(file, word_base):
+    plist = search_urls(word_base)
+    words_to_search = file.read()  # parola da cercare che nel testo può essere prima o dopo della parola chiave
+    words_to_search = re.sub(r'[^\w\s]','',words_to_search)
+    words_to_search = words_to_search.split()
+    result = []
+    for url in plist:
+        total_match = 0
+        for word in words_to_search:
+            match = 0
+            conten =[]
+            parag = search_abstract(url + '/html') # richiamo la funzione
+            if parag != None: # se la lista non è nulla
+                for item in parag: # per ogni elemento della lista
+                    conten.append(item.text.replace('\t','').replace('\xa0','').replace('\n','').replace('\r',''))# tolgo le schifezze dalle stringhe contenute nella lista
+            boolean = True
+            for i in conten:
+                if match == 1 :
+                    boolean = False
+                if boolean and word in i and word not in  exclude_word.stop_words and word != word_base:  # se trovo la parola nella descrizione
+                    match = match + 1  # aumento il contatore di uno
+            total_match += match
+            tuple_result = (total_match, url)
+        result.append(tuple_result)
 
-        if word_to_search not in exclude_word.stop_words:
-            if word_to_search in abstract:  # se trovo la parola nella descrizione
-                match = match + 1  # aumento il contatore di uno
+    return result
 
-    return match
