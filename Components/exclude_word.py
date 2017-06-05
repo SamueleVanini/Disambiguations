@@ -1,6 +1,6 @@
-'''
+"""
 Lista di parole che non vengono considerate tra quelle presenti nel concetto del termine richiesto
-'''
+"""
 USELES_WORDS = ['ovvero', 'il', 'lo', 'la', 'i', 'gli', 'le', 'un', 'uno', 'del', 'dello',
                 'della', 'dei', 'degli', 'delle', 'io', 'me', 'tu', 'lui', 'lei', 'egli', 'noi',
                 'voi', 'essi', 'mio', 'tuo', 'suo', 'nostro', 'vostro', 'loro', 'una', 'tanti',
